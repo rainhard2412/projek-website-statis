@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../../style.css">
+        <script>
+            function skipTo(anchorId) {
+                // 1. Find the 'maincontent' frame from the parent
+                var targetFrame = parent.frames["maincontent"];
+                
+                // 2. Set the "hash" (the part after #) of that frame's URL
+                // This forces the browser to scroll to that ID on the CURRENT page
+                targetFrame.location.hash = anchorId;
+            }
+        </script>
+    </head>
+    
+    <body style="background-color: rgb(186, 255, 189);">
+
+        <h1>ISI HALAMAN</h1>
+
+        <div class="attributelist">
+            <table border="1">
+            <ul type="disc">
+                <tr>
+                <tr><td><li>
+                    <a href="javascript:void(0)" onclick="skipTo('judul')">Judul</a>
+                </li></td></tr>
+                <tr><td><li>
+                    <a href="javascript:void(0)" onclick="skipTo('isi')">Isi teks</a>
+                </li></td></tr>
+                <tr><td><li>
+                    <a href="javascript:void(0)" onclick="skipTo('tutup')">Penutup/akhiran</a>
+                </li></td></tr>
+            </ul>
+            </table>
+        </div>
+
+        <img src="img/logosmpn1.png" alt="logo" style="margin-top: 100%; padding: 0%;">
+    </body>
+</html>

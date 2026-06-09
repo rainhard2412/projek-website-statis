@@ -1,0 +1,175 @@
+function createFeedbackForm() {
+    const style = document.createElement('style');
+    style.textContent = `
+        #js-feedback-container {
+            max-width: 450px;
+            margin: 40px auto;
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        #js-feedback-container h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+        .js-form-group {
+            margin-bottom: 15px;
+        }
+        .js-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .js-form-group input[type="text"],
+        .js-form-group select,
+        .js-form-group textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        .js-form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .js-form-group input[type="file"] {
+            padding: 5px 0;
+        }
+        #js-submit-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        #js-submit-btn:hover {
+            background-color: #218838;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. Create the main container
+    const container = document.createElement('div');
+    container.id = 'js-feedback-container';
+
+    // 3. Create Title
+    const title = document.createElement('h2');
+    title.textContent = 'Feedback & Suggestions';
+    container.appendChild(title);
+
+    // 4. Create Form Element
+    const form = document.createElement('form');
+
+    // Helper function to create form fields easily
+    function createField(labelText, inputElement) {
+        const group = document.createElement('div');
+        group.className = 'js-form-group';
+        
+        const label = document.createElement('label');
+        label.textContent = labelText;
+        
+        group.appendChild(label);
+        group.appendChild(inputElement);
+        return group;
+    }
+
+    // --- Create Inputs ---
+
+    // Name Input
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.name = 'userName';
+    nameInput.placeholder = 'Enter your name';
+    nameInput.required = true;
+
+    // Feedback Type (Dropdown)
+    const typeSelect = document.createElement('select');
+    typeSelect.name = 'feedbackType';
+    const types = ['Feedback', 'Suggestion', 'Bug Report'];
+    types.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        typeSelect.appendChild(option);
+    });
+
+    // Message Input
+    const messageInput = document.createElement('textarea');
+    messageInput.name = 'message';
+    messageInput.placeholder = 'Tell us what you think...';
+    messageInput.required = true;
+
+    // Photo Input
+    const photoInput = document.createElement('input');
+    photoInput.type = 'file';
+    photoInput.name = 'photos';
+    photoInput.accept = 'image/*'; // Restrict to images only
+    photoInput.multiple = true;    // Allow multiple photos
+
+    // Submit Button
+    const submitBtn = document.createElement('button');
+    submitBtn.id = 'js-submit-btn';
+    submitBtn.type = 'submit';
+    submitBtn.textContent = 'Send';
+
+    // 5. Append all inputs to the form
+    form.appendChild(createField('Name:', nameInput));
+    form.appendChild(createField('Type:', typeSelect));
+    form.appendChild(createField('Message:', messageInput));
+    form.appendChild(createField('Attach Photos (Optional):', photoInput));
+    form.appendChild(submitBtn);
+
+    // Append form to container
+    container.appendChild(form);
+
+    // 6. Form Submission Logic
+    form.addEventListener('submit', function(event) {
+        // Prevent page from reloading
+        event.preventDefault(); 
+
+        // Gather form data
+        const formData = new FormData(form);
+        
+        // Log the data (In a real app, you would send this to your server via fetch/XMLHttpRequest)
+        console.log("--- New Submission ---");
+        console.log("Name:", formData.get('userName'));
+        console.log("Type:", formData.get('feedbackType'));
+        console.log("Message:", formData.get('message'));
+        
+        const files = formData.getAll('photos');
+        if (files.length > 0 && files[0].name !== "") {
+            console.log(`Attached ${files.length} photo(s):`);
+            files.forEach(file => console.log(`- ${file.name} (${file.size} bytes)`));
+        } else {
+            console.log("No photos attached.");
+        }
+
+        // Show a success message to the user
+        alert('Thank you for your ' + formData.get('feedbackType').toLowerCase() + '!');
+        
+        // Clear the form
+        form.reset();
+    });
+
+    // 7. Inject the UI into the webpage body
+    // We check if the body is loaded, if not we wait for it
+    if (document.body) {
+        document.body.appendChild(container);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.appendChild(container);
+        });
+    }
+}
+createFeedbackForm();
